@@ -270,7 +270,7 @@
         logPara.style.display = "none"
         var loggedAccount = JSON.parse(localStorage.getItem("loggedAccount")) || {};
         var adminAccount = JSON.parse(localStorage.getItem("adminAccount")) || [];
-     
+       
         loggedAccountNA = ({
                                  userID: "N/A",
                                  email:"N/A",
@@ -280,7 +280,8 @@
                                  date: "N/A"
                                 });
         localStorage.setItem("loggedAccount", JSON.stringify(loggedAccountNA));
-    
+         accounts.push(loggedAccountNA)
+          localStorage.setItem("accounts", JSON.stringify(accounts));
         var teachers = [
                 {
                     name: "Bulaong",
