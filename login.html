@@ -280,8 +280,10 @@
                                  date: "N/A"
                                 });
         localStorage.setItem("loggedAccount", JSON.stringify(loggedAccountNA));
+        if(accounts.length < 1 ){
          accounts.push(loggedAccountNA)
           localStorage.setItem("accounts", JSON.stringify(accounts));
+        }
         var teachers = [
                 {
                     name: "Bulaong",
