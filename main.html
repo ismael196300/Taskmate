@@ -577,7 +577,7 @@
         var accounts = JSON.parse(localStorage.getItem("accounts")) || [];
         var loggedAccount = JSON.parse(localStorage.getItem("loggedAccount")) || {};
         var createdActs = JSON.parse(localStorage.getItem("createdActs")) || [];
-        console.log(createdActs)
+        //console.log(createdActs)
        var teachFullname;
         document.getElementById("btn-check-activity").addEventListener("click",()=>{
             studentTableContainer.style.opacity = "0";
@@ -591,7 +591,7 @@
         document.getElementById("email").textContent = loggedAccount.email;
         document.getElementById("birthdate").textContent = loggedAccount.date;
         document.getElementById("sections").textContent = loggedAccount.section;
-        console.log(loggedAccount)
+        //console.log(loggedAccount)
         if(loggedAccount.section == "ICT-12-1P" || loggedAccount.section == "ICT-12-2P" || loggedAccount.section == "ICT-12-1A" || loggedAccount.section == "ICT-12-2A"){
             document.getElementById("subj-name").textContent = "Animation 3 : Flash"
             document.getElementById("subj-name-2").textContent = "Animation 4 : Photoshop"
@@ -865,7 +865,7 @@
         }
        var passedActs = JSON.parse(localStorage.getItem("passedActs")) || [];
        var btnCheckActivity = document.getElementById("btn-check-activity");
-       console.log( passedActs)
+      // console.log( passedActs)
        btnCheckActivity.addEventListener("click",()=>{
         // console.log(teacher)
             var listOfActDivContainer = document.getElementById("list-of-act-container");
