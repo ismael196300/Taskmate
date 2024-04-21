@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskmate</title>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script type="text/javascript"
+    src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+    </script>
+    <link rel="stylesheet" href="stylesignup.css">
+    <link rel="shortcut icon" href="logo.png" type="image/x-icon">
+    <script type="text/javascript">
+        (function(){
+            emailjs.init({
+                publicKey: "2vPqEDSX0mBOwri4S",
+            });
+        })();
+        </script>
+</head>
+<body>
+   
+    <form method="POST" id="myForm" action="login.html">
+    <div class="wrapper">
+        <h2>Sign Up</h2>
+        <p class="message-code-para">A Verfication Code <br>has been sent to your Email.</p>
+       <div class="input-box">  
+        <box-icon type='solid' name='envelope'></box-icon>
+        <input type="email" name="email" id="newEmail" required placeholder="Email" autocomplete="email">
+       </div>
+       <button type="button" id="send-code"> Send Code</button>
+       <p id="emailPara" class="email-paragraph"></p>
+       <div class="input-box">
+        <box-icon type='solid' name='user'></box-icon>
+        <input type="text"name="newName" id="username" required placeholder="Username" autocomplete="username" maxlength="30">
+       </div>
+       <p id="new-user" class="new-user-para"></p>
+       <div class="input-box">
+        <box-icon type='solid' name='category-alt'></box-icon>
+       <label for="ict-sections" id="lblsec">qw</label>
+        <select name="section" id="ict-sections">
+            <option value="NONE">Section</option>
+            <option value="ICT-11-1P">ICT-11-1P</option>
+            <option value="ICT-11-2P">ICT-11-2P</option>
+            <option value="ICT-11-1A">ICT-11-1A</option>
+            <option value="ICT-11-2A">ICT-11-2A</option>
+            <option value="ICT-12-1P">ICT-12-1P</option>
+            <option value="ICT-12-2P">ICT-12-2P</option>
+            <option value="ICT-12-1A">ICT-12-1A</option>
+            <option value="ICT-12-2A">ICT-12-2A</option>
+
+        </select>
+       </div>
+       <p class="section-select-para" id="section-select-para">Please select a Section.</p>
+       <div class="input-box">
+        <box-icon name='calendar' type='solid' ></box-icon>
+        <input type="date" name="newUsername" id="date" required placeholder="Birthdate" min="1924-01-01" max="2007-12-31">
+        </div>
+        <p id="date-para" class="date-para"></p>
+     
+       <div class="input-box">   
+        <box-icon type='solid' name='lock-alt' class="imgLock" title="Show Password" id="logoPassword" onclick="togglePasswordVisibility()"></box-icon>
+        <input type="password" id="loginPassword" name="password"  placeholder="Password"required autocomplete="current-password" maxlength="16"  minl>
+       
+         </div>
+         <div class="input-box">   
+            <box-icon type='solid' name='lock-alt' class="imgConLock" title="Show Password" id="logoConPassword" onclick="toggleConfirmPasswordVisibility()"></box-icon>
+            <input type="password" id="confirmPassword" name="confirmpassword" placeholder="Confirm Password"required autocomplete="current-password" maxlength="15">
+           
+             </div>
+             <p id="confirm-pass-para" class="confirm-pass-para"></p>
+             <div class="input-box" id="email-code-box">   
+                <box-icon type='solid' name='key'></box-icon>
+                <input type="text" id="confirmEmailCode" name="confirmEmailCode" placeholder="Email Code"required autocomplete="cc-number" maxlength="6" inputmode="numeric">
+               
+                 </div>
+                 <p class="email-code-para">Code is Incorrect.</p>
+            
+             <div class="g-recaptcha" data-sitekey="6LfdIaopAAAAAInMdxYUSveOrk5-FCDRBBoaNC2x"></div>
+             <p class="not-robot-para" id="not-robot-para">Please verify that you are not a Robot.</p>
+          <button type="submit" class="btnCreateAccount" onclick="validateAccount()">Create Account</button>
+            <div class="log-in-link">
+        <p>Already have an account? <a href="login.html" > Log In</a></p>
+        </div>
+    </div>
+    
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+          <p>Account created Successfully! <br> You may now Proceed to Log In. </p>
+          <button type="button" id="yesBtn">Back to Log in</button>
+          
+        </div>
+    </div>
+    </form>
+    <script>
+        document.querySelector(".email-code-para").style.display = "none"
+        document.querySelector(".message-code-para").style.display = "none"
+        var emailCodeBox = document.getElementById("email-code-box")
+        document.getElementById("email-code-box").style.display = "none"
+       document.getElementById("send-code").style.display = "none"
+        var confirmEmailCodeInput = document.getElementById("confirmEmailCode");
+        confirmEmailCodeInput.addEventListener("input", function() {
+      
+        confirmEmailCodeInput.value = confirmEmailCodeInput.value.replace(/\D/g, '');
+    });
+        function hasNoCapitalLetters(input) {
+            return /^[^A-Z]*$/.test(input);
+        }
+        function hasNoNumbers(input) {
+            return /^[^0-9]*$/.test(input);
+        }
+        function hasNoLetters(input) {
+            return /^[^a-zA-Z]*$/.test(input);
+        }
+        function hasNoSpecialCharacters(input) {
+            return /[^\w\s]/.test(input);
+        }
+        function generateRandomNumber() {
+            var result = '';
+            var characters = '1234567890';
+            var charactersLength = characters.length;
+            for (var i = 0; i < 6; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
+       
+        document.getElementById("lblsec").textContent = ""
+         var validationMessage = document.getElementById("emailPara");
+         var confirmPassPara = document.getElementById("confirm-pass-para")
+         confirmPassPara.textContent = "Password does'nt Match."
+         confirmPassPara.style.display = "none"
+        validationMessage.style.display = "none"
+        var userPara = document.getElementById("new-user");
+        userPara.style.display = "none";
+       
+        var newEmail = document.getElementById("newEmail");
+        var newPassword = document.getElementById("loginPassword");
+        var confirmPassword = document.getElementById("confirmPassword");
+        var date = document.getElementById("date");
+        var datePara = document.getElementById("date-para");    
+        datePara.style.display = "none";
+        var notRobotPara = document.getElementById("not-robot-para");
+        notRobotPara.style.display = "none"
+        var newUSer = document.getElementById("username");
+        document.addEventListener("keypress", event=>{
+            if (event.keyCode === 32) {
+                 event.preventDefault();
+             }
+        })
+        var randomSixDigitNumber = generateRandomNumber()
+        
+        document.getElementById("send-code").addEventListener("click",()=>{
+            newEmail.setAttribute("readonly",true)
+            let params = {
+                                        username : "",
+                                        code : randomSixDigitNumber,
+                                        email :  newEmail.value
+                                    }
+                                    emailjs.send("service_9od123a","template_awxq3ao", params)
+        })
+        var accounts = JSON.parse(localStorage.getItem("accounts")) || [];
+        var confirmEmailInput = document.getElementById("confirmEmailCode")
+        document.addEventListener("input", (event)=>{
+           
+            userPara.style.display = "none"
+            notRobotPara.style.display = "none"
+            datePara.style.display = "none"
+            confirmPassPara.style.display = "none"
+            document.getElementById("section-select-para").style.display = "none";
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!newEmail.value.endsWith("@gmail.com")) {
+                validationMessage.textContent = "Email must end at @gmail.com."
+                validationMessage.style.display = "block"   
+                document.getElementById("send-code").style.display = "none"
+            }else   {
+              
+                for(let r = 0;r<accounts.length;r++){
+                    if(newEmail.value == accounts[r].email){
+                        validationMessage.textContent = "Email already used."
+                        validationMessage.style.display = "block";
+                        document.getElementById("send-code").style.display = "none"
+                        break
+                    }else {
+                         document.getElementById("send-code").style.display = "block"
+                         validationMessage.style.display = "none"
+                         
+                    }
+                }
+               
+            }
+             if (newEmail.value.length <= 0) validationMessage.style.display = "none"
+            
+           
+            if(newUSer.value.length > 0) userPara.style.display = "none";
+            if(date.value) datePara.style.display = "none";
+            if(newPassword.value.length > 0 || confirmPassword.value.length > 0)confirmPassPara.style.display = "none";
+            if(newPassword.value === confirmPassword.value){
+                    
+                    confirmPassPara.style.display = "none";
+                    if(newPassword.value.length < 8){   
+                        confirmPassPara.textContent = "Minimum of 8 Characters."
+                        confirmPassPara.style.display = "block";
+                    }else {
+                        if(hasNoCapitalLetters(newPassword.value)){
+                            confirmPassPara.textContent = "Password should contain at least 1 Capital Letter."
+                            confirmPassPara.style.display = "block";
+                          
+                        }
+                        else if(hasNoNumbers(newPassword.value)){
+                            confirmPassPara.textContent = "Password should contain at least 1 Number."
+                            confirmPassPara.style.display = "block";
+                          
+                        }
+                        else if(hasNoLetters(newPassword.value)){
+                            confirmPassPara.textContent = "Password should contain \n at least 1 Letter."
+                            confirmPassPara.style.display = "block";
+                           
+                        }
+                        else if(!hasNoSpecialCharacters(newPassword.value)){
+                            confirmPassPara.textContent = "Password should contain at least 1\nSpecial Character."
+                            confirmPassPara.style.display = "block";
+                          
+                        }
+                        
+                        else{
+                            confirmPassPara.style.display = "none";
+                          
+                        }
+                        
+                    }
+                    
+                
+                }else{
+                  
+                    confirmPassPara.textContent = "Password does'nt Match.";
+                    confirmPassPara.style.display = "block";
+
+                
+                }
+                if(newPassword.value.length <= 0){
+                            confirmPassPara.style.display = "none";
+                        }
+        })
+        document.getElementById("send-code").addEventListener("click",()=>{
+            document.querySelector(".message-code-para").style.display = "block"
+            document.getElementById("email-code-box").style.display = "block"
+            document.getElementById("send-code").style.display = "none"
+        })
+        var selectedSection;
+        document.getElementById("section-select-para").style.display = "none";
+                var sections = document.getElementById("ict-sections");
+                sections.addEventListener("change", ()=>{
+                    selectedSection = sections.value;
+                    document.getElementById("section-select-para").style.display = "none";
+               })
+         function validateAccount() { 
+            var isNotRobot = false;
+          const captchaResponse = grecaptcha.getResponse();
+          if(!captchaResponse.length > 0){
+            notRobotPara.style.display = "block"
+            isNotRobot = false;
+          } else {
+            isNotRobot = true;
+            notRobotPara.style.display = "none"
+          }
+         
+            var accounts = JSON.parse(localStorage.getItem("accounts")) || [];
+            var correctPassword = false;
+            var correctEmail = false;
+            var correctUser = false;
+            var correctDate = false;
+            var correctSection = false;
+            var correctEmailCode = false;
+            
+            event.preventDefault();
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+              if (emailRegex.test(newEmail.value) && newEmail.value.endsWith("gmail.com")) {
+                validationMessage.textContent = "Email must end at @gmail.com."
+                validationMessage.textContent = "";
+                validationMessage.style.display = "none";
+                    for (var i = 0; i < accounts.length; i++) {
+                      if (accounts[i].email === newEmail.value) {
+                            validationMessage.textContent = "Email already used."
+                            validationMessage.style.display = "block";
+
+                         } else{
+                            correctEmail = true;
+                         }
+                     
+                     }
+              }  else {
+                validationMessage.style.display = "block";
+                validationMessage.textContent = "Please enter a valid email address.";
+                correctEmail = false;
+            }
+                if(newUSer.value === ""){
+                    correctUser = false;
+                    userPara.textContent = "Please enter a Username."
+                    userPara.style.display = "block";
+                }else {
+                    userPara.style.display = "none"
+                    for (var i = 0; i < accounts.length; i++) {
+                      if (accounts[i].username.toLowerCase() === newUSer.value.toLowerCase()) {
+                            userPara.textContent = "Username already used."
+                            userPara.style.display = "block";
+                         } else{
+                            correctUser = true;
+                         }
+                     
+                     }
+                }
+                
+                if(sections.value == "NONE" ||  sections.value == null ||  sections.value == undefined){
+                    correctSection = false;
+                    document.getElementById("section-select-para").style.display = "block";
+                }else{
+                    correctSection = true;
+                    document.getElementById("section-select-para").style.display = "none";
+                }
+               var dateValue = date.value
+               if(!dateValue){
+                    datePara.textContent = "Please enter your Birthdate."
+                    datePara.style.display = "block";
+                    correctDate = false;
+               }else{
+                     correctDate = true;
+                     datePara.style.display = "none";
+               }
+                if(newPassword.value === ""){  
+                    confirmPassPara.textContent = "Please enter a Password.";
+                    confirmPassPara.style.display = "block";
+                    correctPassword = false;     
+                }else{
+                    if(newPassword.value === confirmPassword.value){
+                    
+                        confirmPassPara.style.display = "none";
+                        if(newPassword.value.length < 8){   
+                            confirmPassPara.textContent = "Minimum of 8 Characters."
+                            confirmPassPara.style.display = "block";
+                        }else {
+                            if(hasNoCapitalLetters(newPassword.value)){
+                                confirmPassPara.textContent = "Password should contain at least 1 Capital Letter."
+                                confirmPassPara.style.display = "block";
+                                correctPassword = false;
+                            }
+                            else if(hasNoNumbers(newPassword.value)){
+                                confirmPassPara.textContent = "Password should contain at least 1 Number."
+                                confirmPassPara.style.display = "block";
+                                correctPassword = false;
+                            }
+                            else if(hasNoLetters(newPassword.value)){
+                                confirmPassPara.textContent = "Password should contain \n at least 1 Letter."
+                                confirmPassPara.style.display = "block";
+                                correctPassword = false;
+                            }
+                            else if(!hasNoSpecialCharacters(newPassword.value)){
+                                confirmPassPara.textContent = "Password should contain at least 1\nSpecial Character."
+                                confirmPassPara.style.display = "block";
+                                correctPassword = false;
+                            }
+                            else{
+                                confirmPassPara.style.display = "none";
+                                correctPassword = true;
+                            }
+                            
+                        }
+                        
+                    
+                    }else{
+                        correctPassword = false;
+                        confirmPassPara.textContent = "Password does'nt Match.";
+                        confirmPassPara.style.display = "block";
+
+                    
+                    }
+                } 
+                if(confirmEmailInput.value == randomSixDigitNumber){
+                    correctEmailCode = true
+                    document.querySelector(".email-code-para").style.display = "none"
+                }else {
+                    correctEmailCode = false
+                    document.querySelector(".email-code-para").style.display = "block"
+                }
+                
+                if(correctPassword && correctEmail && correctUser && correctDate && correctSection && isNotRobot && correctEmailCode){
+                    
+               
+                var email = newEmail.value;
+                var username = newUSer.value ;
+                var section = selectedSection;
+                var password = newPassword.value;
+                var dob = date.value;
+               
+                
+                accounts.push({email: email, username: username, section : section, password: password, date: dob});
+                localStorage.setItem("accounts", JSON.stringify(accounts));
+                newEmail.value = "";
+                newUSer.value ="";
+                date.value = "";
+                newPassword.value = ""
+                document.getElementById("confirmPassword").value = "";
+                document.querySelector(".modal").style.display = "block"
+                }
+              
+            }
+          
+           
+        
+        
+        function togglePasswordVisibility() {
+           
+            var imgLock = document.getElementById("logoPassword");
+             var passwordInput = document.getElementById("loginPassword");
+              passwordInput.type = (passwordInput.type === "password") ? "text" : "password";
+             imgLock.setAttribute('title', (passwordInput.type === "password") ? 'Show Password' : 'Hide Password');
+            imgLock.setAttribute('name', (passwordInput.type === "password") ? 'lock-alt' : 'lock-open-alt');
+             var newImgLock = imgLock.cloneNode(true);
+             imgLock.parentNode.replaceChild(newImgLock, imgLock);
+        }
+      
+        function toggleConfirmPasswordVisibility() {
+           
+           var imgLock = document.getElementById("logoConPassword");
+            var passwordInput = document.getElementById("confirmPassword");
+             passwordInput.type = (passwordInput.type === "password") ? "text" : "password";
+            imgLock.setAttribute('title', (passwordInput.type === "password") ? 'Show Password' : 'Hide Password');
+           imgLock.setAttribute('name', (passwordInput.type === "password") ? 'lock-alt' : 'lock-open-alt');
+            var newImgLock = imgLock.cloneNode(true);
+            imgLock.parentNode.replaceChild(newImgLock, imgLock);
+       }
+     
+       document.querySelector("#yesBtn").addEventListener("click",()=>{
+            window.location.href = "login.html"
+       })
+       let docTitle =  document.title
+       window.addEventListener("blur",()=>{
+        document.title = "Taskmate - Sign Up"
+      })
+      window.addEventListener("focus",()=>{
+        document.title = docTitle
+      })
+        </script>
+   
+</body>
+</html>
