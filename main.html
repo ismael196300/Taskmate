@@ -2131,12 +2131,12 @@
                                     document.querySelector(".settings-send-code").style.display = "none"
                                     document.getElementById("input-new-email").readOnly = true
                                     document.getElementById("input-confirm-email").readOnly = true
-                                    let params = {
+                                   let parameter = {
                                         username : loggedAccount.username,
                                         code : emailChangeCode,
                                         email :  document.getElementById("input-new-email").value
                                     }
-                                    emailjs.send("service_9od123a","template_awxq3ao", params)
+                                    emailjs.send("service_9od123a","template_awxq3ao", parameter)
                                    
                                 }
                             }
