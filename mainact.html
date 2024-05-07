@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of Activities</title>
+   <link rel="stylesheet" href="mainactstyle.css">
+   <link rel="shortcut icon" href="logo.png" type="image/x-icon">
+</head>
+<body>
+
+<div class="list-of-act">
+        <button class="back-to-main" type="button">Back</button>
+    <div class="list-heading">
+        <h3></h3>
+        <span title="Name"></span>
+    </div>
+    <div class="list-of-act-container">
+        <div class="list-of-act-box">
+            <div class="list-img">
+                <img src="#" alt="Image 1" id="imgPic" title="Image">
+            </div>
+            <div class="list-of-act-para">
+                <p class="late-para">Late</p>
+                <span id="dueDate"></span>
+                <a href="#" title="Title"></a>
+                <p class="score" title="Total Score"></p>
+                <p class="student-act-descrip" ></p>
+            </div>
+            <div class="list-inputs">
+                <div class="pass-act" id="pass-act">
+                    <label for="pass-file" class="custom-file-upload">Choose File</label>
+                    <input type="file" name="pass-file" id="pass-file" title="Upload File" accept="image/*">
+                </div>
+                <p class="invalid-pass-para">Please upload atleast 1 File.</p>
+                <div class="input-grade" id="input-grade">
+                    <label >Score:</label>
+                    <div class="input-score">
+                        <input type="number" id="numberInput" title="Score">
+                    </div>
+                   <p class="invalid-score-para">Invalid Score.</p>
+                </div>
+                <br>
+                <div class="comment-box">
+                    <label for="comment-area"></label>
+                    <textarea name="comment" id="comment-area" cols="30" rows="3" placeholder="Comment"  ></textarea>
+                    <div class="file-pass-act" id="file-pass-act">
+                        
+                    </div>
+                </div>
+                <br>
+                <div class="pass-act-btn">
+                    <button type="button" id="btn-pass-act">Pass Activity</button>
+                    <button type="button" class="return-pass-act">Return Activity</button>
+                </div>
+            </div>
+        </div>
+      
+       
+    </div>
+</div>
+<div id="myModal" class="modal">
+    <div class="modal-content">
+      <p class="mess-para"> <br></p>
+      <button type="button" id="yesBtn">Done</button>
+      
+    </div>
+</div>
+    <script>
+     
+          var passedActs = JSON.parse(localStorage.getItem("passedActs")) || [];
+       document.querySelector(".invalid-score-para").style.display = "none"
+        var selectedAct = localStorage.getItem("selectedAct");
+         var selectedActivity = JSON.parse(selectedAct);
+         var ifTeacher = localStorage.getItem("ifTeacher")
+         
+          document.getElementById("numberInput").addEventListener("input", function() {
+            var inputValue = parseInt(this.value);
+            if (isNaN(inputValue) || inputValue < 0 || inputValue > selectedActivity.actScore) {
+                this.value = "";
+            }
+       
+        });
+        document.title = selectedActivity.title;
+        document.querySelector(".late-para").style.display = "none"
+        var deadlineDate = new Date(selectedActivity.dueDate)
+       var now = new Date()
+       
+        var btnPassAct = document.getElementById("btn-pass-act");
+       if(ifTeacher == "false"){
+        document.querySelector("h3").textContent = selectedActivity.subjectName;
+        document.querySelector('span').textContent = selectedActivity.teacherName;
+        document.querySelector('a').textContent = selectedActivity.title;
+        document.getElementById('imgPic').src = selectedActivity.image
+        document.querySelector(".input-grade").style.display = "none"
+        document.querySelector(".input-grade label").style.display = "none"
+        document.querySelector('#dueDate').textContent = selectedActivity.dueDate;
+        document.querySelector('.student-act-descrip').textContent = selectedActivity.description;
+        document.querySelector(".score").textContent = "Score: " + selectedActivity.actScore;
+        document.getElementById("pass-act").style.display = "block"
+        document.getElementById("numberInput").style.display = "none"
+        document.querySelector(".return-pass-act").style.display = "none"
+        
+        if(deadlineDate < now){
+            document.querySelector(".late-para").style.display = "block"
+       }else{
+        document.querySelector(".late-para").style.display = "none"
+       }
+        
+       }else {
+          btnPassAct.textContent = "Grade Activity"
+          document.querySelector(".input-grade label").style.display = "block"
+          document.querySelector('span').textContent = selectedActivity.teacherName;
+          document.querySelector("h3").textContent = selectedActivity.subjectName;
+          document.querySelector('a').textContent = selectedActivity.title;
+        document.getElementById('imgPic').src = selectedActivity.image;
+        document.querySelector('.student-act-descrip').textContent = selectedActivity.description;
+        document.querySelector(".score").textContent = "Score: " + selectedActivity.actScore;
+        document.getElementById("pass-act").style.display = "none"
+        document.getElementById("numberInput").style.display = "block"
+        document.getElementById("input-grade").style.display = "block"
+        if(deadlineDate < deadlineDate){
+            document.querySelector(".late-para").style.display = "block"
+       }else{
+        document.querySelector(".late-para").style.display = "none"
+       }
+       }
+      
+       const leftArrowBtn = document.createElement('button');
+       leftArrowBtn.textContent = 'Back'; 
+       leftArrowBtn.style.backgroundColor = "#FFF"
+       leftArrowBtn.style.border = "none"
+       leftArrowBtn.style.borderRadius = "20px"
+       leftArrowBtn.style.width = "30%"
+       leftArrowBtn.style.cursor = "pointer"
+       leftArrowBtn.style.boxShadow = "0 0 10px rgba(0, 0, 0, .1)"
+       
+       const rightArrowBtn = document.createElement('button');
+       rightArrowBtn.textContent = 'Next'; 
+       rightArrowBtn.style.backgroundColor = "#FFF"
+       rightArrowBtn.style.border = "none"
+       rightArrowBtn.style.borderRadius = "20px"
+       rightArrowBtn.style.width = "30%"
+       rightArrowBtn.style.cursor = "pointer"
+       rightArrowBtn.style.boxShadow = "0 0 10px rgba(0, 0, 0, .1)"
+       rightArrowBtn.style.marginTop = "10px"
+       let currentIndex = 0;
+       if(selectedActivity.imageFiles.length == 1){
+        leftArrowBtn.style.display = "none"
+        rightArrowBtn.style.display = "none"
+       }else {
+        leftArrowBtn.style.display = "block"
+        rightArrowBtn.style.display = "block"
+       }
+       leftArrowBtn.addEventListener ("click", ()=>{
+            if(currentIndex > 0){
+                currentIndex--
+                document.getElementById('imgPic').src = selectedActivity.imageFiles[currentIndex]
+            }
+       })
+       rightArrowBtn.addEventListener("click", ()=>{
+        if (currentIndex < selectedActivity.imageFiles.length - 1) {
+            currentIndex++;
+            document.getElementById('imgPic').src = selectedActivity.imageFiles[currentIndex]
+        }
+       })
+       document.querySelector('.list-img').appendChild(leftArrowBtn)
+       document.querySelector('.list-img').appendChild(rightArrowBtn)
+        document.querySelector(".back-to-main").addEventListener("click",()=>{
+            window.location.href = "main.html";
+        })
+        var createPassAct = [];
+
+        document.getElementById('imgPic').addEventListener('click', function() {
+            this.classList.toggle('full-view');
+        });
+
+
+        let fileContent;
+        document.getElementById('pass-file').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const fileType = file.type;
+                fileContent = e.target.result;
+                createPassAct.push(fileContent);
+
+            if (fileType.startsWith('image')) {
+                const imgContainer = document.createElement('div');
+                imgContainer.style.position = 'relative';
+                const imageViewer = document.getElementById('file-pass-act');
+                const imgElement = document.createElement('img');
+                imgElement.src = fileContent;
+                imgElement.alt = 'Uploaded Image';
+                imgElement.style.maxWidth = '100%';
+
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove';
+                removeButton.style.position = 'absolute';
+                removeButton.style.bottom = '5px';
+                removeButton.style.right = '5px';
+                removeButton.addEventListener('click', function() {
+                    const index = createPassAct.indexOf(fileContent);
+                    if (index !== -1) {
+                        createPassAct.splice(index, 1);
+                    }
+                    imgElement.remove();
+                    this.remove();
+                });
+
+                imgContainer.appendChild(imgElement);
+                imgContainer.appendChild(removeButton);
+                imageViewer.appendChild(imgContainer);
+            } else if (fileType === 'application/pdf') {
+                const pdfViewer = document.getElementById('file-pass-act');
+                const embedElement = document.createElement('embed');
+                embedElement.src = fileContent;
+                embedElement.type = 'application/pdf';
+                embedElement.style.width = '100%';
+                embedElement.style.height = '600px';
+                pdfViewer.innerHTML = '';
+                pdfViewer.appendChild(embedElement);
+                createPassAct.push(fileContent);
+            }
+        };
+
+            reader.readAsDataURL(file);
+    });
+
+        let passedInfos = JSON.parse(localStorage.getItem('passedActs')) || [];
+        var loggedAccount = JSON.parse(localStorage.getItem("loggedAccount")) || {};
+        
+        document.querySelector(".invalid-pass-para").style.display = "none"
+        btnPassAct.addEventListener("click", ()=>{
+            
+            if(ifTeacher == "false"){
+                if(createPassAct.length > 0){
+                    document.getElementById("input-grade").style.display = "none"
+                    document.querySelector(".invalid-pass-para").style.display = "none"
+                let passInfos = {
+                    studentActComment : document.getElementById("comment-area").value,
+                    studentPassedFile : fileContent,
+                    studentPassedFileActs : createPassAct,
+                    actScore : selectedActivity.actScore,
+                    studentTeacher : selectedActivity.teacherName,
+                    passedSubj : selectedActivity.subjectName,
+                    studentName : loggedAccount.username,
+                    studentSection : loggedAccount.section,
+                    actTitle : selectedActivity.title,
+                    teacher : selectedActivity.teacher,
+                    datePassed : now,
+                    studentScore : "N/A" ,
+                    returned : "false"
+                    
+            }
+                passedInfos.push(passInfos)
+                localStorage.setItem('passedActs', JSON.stringify(passedInfos));
+                
+                document.querySelector(".mess-para").textContent = "Activity " +"\"" + selectedActivity.title +"\"" + " created Successfully!"
+                document.querySelector(".modal").style.display = "block"
+                
+                }else {
+                    document.querySelector(".invalid-pass-para").style.display = "block"
+                }
+               
+            }else {
+                
+                 var studentScore= document.getElementById("numberInput").value
+                 if(studentScore === undefined || studentScore === ""  || studentScore === null || studentScore.startsWith("00")){
+                   
+                    document.querySelector(".invalid-score-para").style.display = "block"
+                
+                 }else {
+                    
+                    document.querySelector(".invalid-score-para").style.display = "none"
+                    passedActs.forEach(passedAct => {
+                    if(selectedActivity.teacherName == passedAct.studentName && selectedActivity.title == passedAct.actTitle){
+                        passedAct.studentScore = studentScore
+                        passedAct.returned = "false"
+                        passedAct.studentActComment = document.getElementById("comment-area").value,
+                        localStorage.setItem('passedActs', JSON.stringify(passedActs));
+                       
+                        document.querySelector(".mess-para").textContent = "Activity " +"\"" + selectedActivity.title +" \""  + "by "  +"\"" + selectedActivity.teacherName +"\""+ " checked Successfully!"
+                        document.querySelector(".modal").style.display = "block"
+                    }
+                    });
+                 }
+                
+            }
+           
+        })
+        document.querySelector(".return-pass-act").addEventListener("click",()=>{
+            passedActs.forEach(passedAct => {
+                    
+                    if(selectedActivity.teacherName == passedAct.studentName && selectedActivity.title == passedAct.actTitle){
+                        passedAct.returned = "true"
+                        passedAct.studentActComment = document.getElementById("comment-area").value,
+                        localStorage.setItem('passedActs', JSON.stringify(passedActs));
+                        document.querySelector(".mess-para").textContent = "Activity " +"\"" + selectedActivity.title +" \""  + "by "  +"\" " + selectedActivity.teacherName +" \""+ " returned Successfully!"
+                        document.querySelector(".modal").style.display = "block"
+                    }
+                });
+        })
+      
+     
+    document.getElementById("yesBtn").addEventListener("click",()=>{
+        window.location.href = "main.html"
+    })
+    </script>
+</body>
+</html>
